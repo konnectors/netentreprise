@@ -4,7 +4,6 @@ const {
   signin,
   scrape,
   log,
-  htmlToPDF,
   saveBills
 } = require('cozy-konnector-libs')
 const moment = require('moment')
@@ -14,7 +13,8 @@ const request = requestFactory({
   debug: false,
   cheerio: true,
   json: false,
-  jar: true
+  jar: true,
+  encoding: 'latin1'
 })
 
 const baseUrl = 'https://net-entreprise.fr/'
@@ -195,7 +195,7 @@ async function getDeclaration(params, periode) {
       sel: 'span.text_grand_gras',
     }
   },'.tableau_donnees_cons .cellule_droite_middle');
-  subData = subData[3].date.substring(1).trim().substring(3).substring(0,10).trim();
+  subData = subData[3].date.substring(3).substring(0,10).trim();
   moment.locale('fr');
   subData = subData.split('/');
   let day = parseInt(subData[0])+1;
@@ -204,19 +204,96 @@ async function getDeclaration(params, periode) {
   bill.vendor = 'urssaf';
   bill.filename = bill.date.format('YYYY-MM')+'.pdf';
   bill.date = bill.date.toDate();
-  bill.filestream = await declarationToStream(data);
+  bill.filestream = await buildDeclarationPDF(data, periode);
   return bill;
 }
 
 
-async function declarationToStream(data) {
+async function buildDeclarationPDF(data, periode) {
   var doc = new pdf.Document();
+
+  //title
   const cell = doc.cell({ paddingBottom: 0.5 * pdf.cm }).text()
-  cell.add('Généré automatiquement par le connecteur Netflix depuis la page ', {
+  let type = "Déclaration Trimestrielle de Recettes"
+  if(periode % 10 !== 0)
+    type = "Déclaration Mensuelle de Recettes"
+  type += "\n Régime micro-social simplifié"
+  cell.add(type, {
     font: require('pdfjs/font/Helvetica-Bold'),
     fontSize: 14
   })
-  htmlToPDF(data,doc,data('.tableau_donnees_cons'),{});
+
+  //first table
+  let element = data('.tableau_donnees_cons');
+  let table = doc.table({
+    widths: [270,270],
+    borderWidth: 1
+  })
+  element = element.children('tbody')
+  let subData = element.children('tr')
+  subData.each((i,elem) => {
+    elem = data(elem).children('td')
+    let value = data(elem[0]).text().trim()
+    let row = table.row({padding: 0.1 * pdf.cm})
+    row.cell(value,{backgroundColor: '#A0A0A0'})
+    value = data(elem[1]).find('span').text().trim().replace(/\s\s+/g, ' ')
+    row.cell(value)
+
+  })
+  
+  doc.cell({ paddingBottom: 2.0 * pdf.cm }).text()
+  
+  //second table
+  element = data('.tableau_donnees');
+  table = doc.table({
+    widths: [340,60,140],
+    borderWidth: 1
+  })
+  element = element.children('tbody')
+  subData = element.children('tr')
+  //parse table
+  subData.each((i,elem) => {
+    elem = data(elem).children('td')
+    let key = data(elem[0]).text().trim()
+    //subtable
+    if(data(elem[0]).find('table').length > 0) {
+      return true;
+    }
+    if(key !== '') {
+      let subElem = data(elem[1]).find('span').parent()
+      let value = ""
+      let interValue = ""
+      let optsRight = {alignment: 'right'}
+      let optsCenter = {alignment: 'center'}
+      let optsLeft = {backgroundColor: '#A0A0A0'}
+      let factor = 0.1
+      //has 2 col value
+      if(subElem.length > 1) {
+        value = data(subElem[1]).text().trim().replace(/\s\s+/g, ' ')
+        interValue = data(subElem[0]).text().trim().replace(/\s\s+/g, ' ')
+      }
+      else {
+        value = data(subElem[0]).text().trim().replace(/\s\s+/g, ' ')
+        optsRight.colspan = 2
+      }
+      //has no col value
+      if(value === '') {
+        optsLeft = {colspan: 3}
+        factor = 0.3
+      }
+      //make row
+      let row = table.row({padding: factor * pdf.cm})
+      row.cell(key,optsLeft)
+      if(interValue !== '') {
+        row.cell(interValue,optsCenter)
+      }
+      if(value !== '') {
+        row.cell(value,optsRight)
+      }
+    }
+
+  })
+  
   doc.end();
   return doc;
 }

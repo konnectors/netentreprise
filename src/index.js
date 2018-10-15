@@ -23,8 +23,8 @@ const serviceUrl = 'https://portail.net-entreprises.fr/priv/'
 const urssafUrl = 'https://www.ti.urssaf.fr/'
 module.exports = new BaseKonnector(start)
 
+/* Startup Function for the konnector */
 async function start(fields) {
-  let accData = this.getAccountData()
   log('info', 'Authenticating ...')
   //Auth and retrieve declaration URL
   const urlDeclaration = await authenticate(
@@ -37,9 +37,9 @@ async function start(fields) {
 
   log('info', 'Get Declarations Parameters')
   let params = await getDeclarationsParameters(urlDeclaration)
-  log('info', 'Get Declaration ')
+  log('info', 'Get Declarations')
   const declarationList = await buildDeclarationList(params)
-  const bills = await getAllDeclaration(params, declarationList, accData)
+  const bills = await getAllDeclaration(params, declarationList, this)
 
   await saveBills(bills, fields, {
     identifiers: ['net-entreprise'],
@@ -47,6 +47,7 @@ async function start(fields) {
   })
 }
 
+/* Handle Authentication */
 async function authenticate(siret, lastname, firstname, password) {
   const response = await signin({
     url: `${baseUrl}`,
@@ -87,6 +88,7 @@ async function authenticate(siret, lastname, firstname, password) {
   return doc.url
 }
 
+/* Get All Parameters for declarations */
 async function getDeclarationsParameters(url) {
   let response = await request(url)
   let doc = scrape(response('[name="form"]'), {
@@ -117,6 +119,7 @@ async function getDeclarationsParameters(url) {
   return form
 }
 
+/* Get all available declarations IDs */
 async function buildDeclarationList(params) {
   params.codepaye = 10
   params.echeance = 44
@@ -132,6 +135,8 @@ async function buildDeclarationList(params) {
     completeList.push(parseInt(partialList[i].period))
   return completeList
 }
+
+/* Extract IDs from menu */
 async function getList(params, urlPart, subItem, splitPart) {
   const data = await request({
     method: 'POST',
@@ -152,25 +157,31 @@ async function getList(params, urlPart, subItem, splitPart) {
   return doc
 }
 
-async function getAllDeclaration(params, declarationList, accData) {
+/* Function that retrieve all new declaration not sync before */
+async function getAllDeclaration(params, declarationList, konnector) {
+  let accData = konnector.getAccountData()
   let exist = Object.keys(accData).length > 0
   let bills = []
-  if (!exist || accData.lastPeriod !== params.periode - 1) {
-    let lastPeriod = declarationList.length
-    if (exist) {
-      lastPeriod = declarationList.indexOf(accData.lastPeriod)
-      if (lastPeriod === -1) lastPeriod = declarationList.length
-    }
-
-    for (let i = 0; i < lastPeriod; i++) {
+  let lastPeriod = declarationList.length -1
+  if (exist) {
+    let lastSaved = declarationList.indexOf(accData.lastSaved)
+    if(lastSaved !== -1)
+      lastPeriod = lastSaved
+  }
+  for (let i = lastPeriod; i >= 0; i--) {
+    try {
       const bill = await getDeclaration(params, declarationList[i])
       bills.push(bill)
-      break
+      accData.lastSaved = declarationList[i]
+      konnector.saveAccountData(accData,{merge:false})
+    } catch(error) {
+      break;
     }
   }
   return bills
 }
 
+/* Get a specific declaration */
 async function getDeclaration(params, periode) {
   params.periode = periode
   params.codepaye = 10
@@ -216,6 +227,7 @@ async function getDeclaration(params, periode) {
   return bill
 }
 
+/* Build PDF from declaration */
 async function buildDeclarationPDF(data, periode) {
   var doc = new pdf.Document()
 

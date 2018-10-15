@@ -1,16 +1,22 @@
 {
   "version": "1.0.0",
-  "name": "Connector template",
+  "name": "Net-Entreprise (Micro-Entrepreneur)",
   "type": "konnector",
   "language": "node",
   "icon": "icon.png",
-  "slug": "template",
-  "source": "git://github.com/konnectors/cozy-konnector-template.git",
-  "editor": "Cozy",
-  "vendor_link": "Link to the target website",
+  "slug": "net-entreprise-micro",
+  "source": "https://git.mob-dev.fr/Schoumi/cozy-konnector-netentreprise.git",
+  "editor": "Mob-Dev",
+  "vendor_link": "https://www.net-entreprises.fr/",
   "categories": ["other"],
   "fields": {
-    "login": {
+    "siret": {
+      "type": "text"
+    },
+    "firstname": {
+      "type": "text"
+    },
+    "lastname": {
       "type": "text"
     },
     "password": {
@@ -43,23 +49,23 @@
     }
   },
   "developer": {
-    "name": "Cozy Cloud",
-    "url": "https://cozy.io"
+    "name": "Mob-Dev",
+    "url": "https://mob-dev.fr"
   },
   "langs": ["fr", "en"],
   "locales": {
     "fr": {
-      "short_description": "Template de connecteur",
-      "long_description": "Ce template récupère une liste de livres sur un site de scraping",
+      "short_description": "Connecteur pour Net-entreprise Micro-Entrepreneur",
+      "long_description": "Ce connecteur récupère les déclarations faites auprès de l'urssaf via Net-Entreprise pour les Micro-Entrepreneur seulement",
       "permissions": {
         "bank operations": {
-          "description": "Utilisé pour relier les factures à des operations bancaires"
+          "description": "Utilisé pour relier les déclarations à des operations bancaires"
         },
         "bills": {
-          "description": "Utilisé pour sauver les données des factures"
+          "description": "Utilisé pour sauver les données des déclarations"
         },
         "files": {
-          "description": "Utilisé pour sauvegarder les factures"
+          "description": "Utilisé pour sauvegarder les déclarations"
         },
         "accounts": {
           "description": "Utilisé pour obtenir les données du compte"
@@ -67,17 +73,17 @@
       }
     },
     "en": {
-      "short_description": "Connector template",
-      "long_description": "This template fetches a list of books from a scraping website",
+      "short_description": "Connector for Net-entreprise Micro-Entrepreneur",
+      "long_description": "This connector retrieve declaration made to urssaf through Net-Entreprise for Micro-Entrepreneur only",
       "permissions": {
         "bank operations": {
-          "description": "Required to link bank operations to bills"
+          "description": "Required to link bank operations to declarations"
         },
         "bills": {
-          "description": "Required to save the bills data"
+          "description": "Required to save the declarations data"
         },
         "files": {
-          "description": "Required to save the bills"
+          "description": "Required to save the declarations"
         },
         "accounts": {
           "description": "Required to get the account's data"

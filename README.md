@@ -11,7 +11,7 @@ What's Cozy?
 What is this konnector about ?
 ------------------------------
 
-This konnector retrieves your declarationsi from [Net-Entreprises](https://net-entreprises.fr) for Micro/Auto Entrepreneur
+This konnector retrieves your declarations from [Net-Entreprises](https://net-entreprises.fr) for Micro/Auto Entrepreneur
 <YOUR DESCRIPTION HERE>
 
 ### Open a Pull-Request

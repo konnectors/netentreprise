@@ -33,6 +33,7 @@ Create a `konnector-dev-config.json` file at the root with your test credentials
     "lastname":"LastName",
     "firstname":"FirstName",
     "password":"1234567890"
+  }
 }
 ```
 Then :

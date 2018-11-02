@@ -163,20 +163,19 @@ async function getAllDeclaration(params, declarationList) {
   let accData = this.getAccountData()
   let exist = Object.keys(accData).length > 0
   let bills = []
-  let lastPeriod = declarationList.length -1
+  let lastPeriod = declarationList.length - 1
   if (exist) {
     let lastSaved = declarationList.indexOf(accData.lastSaved)
-    if(lastSaved !== -1)
-      lastPeriod = lastSaved
+    if (lastSaved !== -1) lastPeriod = lastSaved
   }
   for (let i = lastPeriod; i >= 0; i--) {
     try {
       const bill = await getDeclaration(params, declarationList[i])
       bills.push(bill)
       accData.lastSaved = declarationList[i]
-      this.saveAccountData(accData,{merge:false})
-    } catch(error) {
-      break;
+      this.saveAccountData(accData, { merge: false })
+    } catch (error) {
+      break
     }
   }
   return bills
@@ -198,7 +197,7 @@ async function getDeclaration(params, periode) {
   let subData = scrape(data('#table-paiements-tldp .cellule_droite_middle'), {
     amount: {
       sel: 'span#libmtpai',
-      parse: value => parseInt(value)
+      parse: value => { value = value.replace(".",""); return parseInt(value) }
     }
   })
   let bill = {}
@@ -212,34 +211,27 @@ async function getDeclaration(params, periode) {
     },
     '.tableau_donnees .cellule_droite_middle'
   )
-  subData = subData[3].date
+  subData = subData[2].date
     .substring(3)
     .substring(0, 10)
     .trim()
   moment.locale('fr')
   subData = subData.split('/')
-  let day = parseInt(subData[0]) + 1
+  let day = parseInt(subData[0])
   day = day < 10 ? '0' + day.toString() : day.toString()
-  bill.date = moment('' + subData[2] + '-' + subData[1] + '-' + day)
+  bill.date = moment('' + subData[2] + '-' + subData[1] + '-' + day+'T00:00:00.000Z').add(1,'days')
   bill.vendor = 'urssaf'
-  /**/
   let month = periode % 100
-  if(month % 10 == 0) {
+  if (month % 10 == 0) {
     month = month / 10
-  }
-  else
-  {
-    let tri = Math.floor(month/10)
+  } else {
+    let tri = Math.floor(month / 10)
     month = month % 10
     month = (tri - 1) * 3 + month
-    if(month < 10)
-      month = '0'+month
+    if (month < 10) month = '0' + month
   }
-  let year = 2000+Math.floor(periode/100)
-
-  bill.filename = ''+year+'-'+month+'.pdf'
-
-  /**/
+  let year = 2000 + Math.floor(periode / 100)
+  bill.filename = '' + year + '-' + month + '.pdf'
   bill.date = bill.date.toDate()
   bill.filestream = await buildDeclarationPDF(data, periode)
   return bill
@@ -313,7 +305,7 @@ async function buildDeclarationPDF(data, periode) {
   subData.each((i, elem) => {
     const savedElem = elem
     elem = data(elem).children('td')
-    
+
     let optsRight = { alignment: 'right' }
     let optsCenter = { alignment: 'center' }
 
@@ -506,7 +498,7 @@ async function buildDeclarationPDF(data, periode) {
       }
       delete optsRight.colspan
       delete optsLeft.colspan
-      optsLeft.backgroundColor='#A0A0A0'
+      optsLeft.backgroundColor = '#A0A0A0'
     }
   })
 

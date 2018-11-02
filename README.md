@@ -11,7 +11,7 @@ What's Cozy?
 What is this konnector about ?
 ------------------------------
 
-This konnector retrieves your <SOME DATA> and <SOME OTHER DATA> from <SERVICE>
+This konnector retrieves your declarationsi from [Net-Entreprises](https://net-entreprises.fr) for Micro/Auto Entrepreneur
 <YOUR DESCRIPTION HERE>
 
 ### Open a Pull-Request
@@ -28,7 +28,11 @@ Create a `konnector-dev-config.json` file at the root with your test credentials
 ```javascript
 {
   "COZY_URL": "http://cozy.tools:8080",
-  "fields": {"login":"zuck.m@rk.fb", "password":"123456"}
+  "fields": {
+    "siret":"12345678901234",
+    "lastname":"LastName",
+    "firstname":"FirstName",
+    "password":"1234567890"
 }
 ```
 Then :
@@ -45,7 +49,7 @@ This connector uses [cozy-konnector-libs](https://github.com/cozy/cozy-konnector
 
 ### Maintainer
 
-The lead maintainers for this konnector is <YOUR NAME>
+The lead maintainers for this konnector is Schoumi
 
 
 ### Get in touch
@@ -62,7 +66,7 @@ You can reach the Cozy Community by:
 License
 -------
 
-<YOUR KONNECTOR NAME> is developed by <your name> and distributed under the [AGPL v3 license][agpl-3.0].
+Net-Entreprises-AE is developed by Schoumi and distributed under the [AGPL v3 license][agpl-3.0].
 
 [cozy]: https://cozy.io "Cozy Cloud"
 [agpl-3.0]: https://www.gnu.org/licenses/agpl-3.0.html

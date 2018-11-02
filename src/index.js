@@ -39,7 +39,8 @@ async function start(fields) {
   let params = await getDeclarationsParameters(urlDeclaration)
   log('info', 'Get Declarations')
   const declarationList = await buildDeclarationList(params)
-  const bills = await getAllDeclaration(params, declarationList, this)
+  const getAllDec = getAllDeclaration.bind(this)
+  const bills = await getAllDec(params, declarationList)
 
   await saveBills(bills, fields, {
     identifiers: ['net-entreprise'],
@@ -158,8 +159,8 @@ async function getList(params, urlPart, subItem, splitPart) {
 }
 
 /* Function that retrieve all new declaration not sync before */
-async function getAllDeclaration(params, declarationList, konnector) {
-  let accData = konnector.getAccountData()
+async function getAllDeclaration(params, declarationList) {
+  let accData = this.getAccountData()
   let exist = Object.keys(accData).length > 0
   let bills = []
   let lastPeriod = declarationList.length -1
@@ -173,7 +174,7 @@ async function getAllDeclaration(params, declarationList, konnector) {
       const bill = await getDeclaration(params, declarationList[i])
       bills.push(bill)
       accData.lastSaved = declarationList[i]
-      konnector.saveAccountData(accData,{merge:false})
+      this.saveAccountData(accData,{merge:false})
     } catch(error) {
       break;
     }
@@ -221,7 +222,24 @@ async function getDeclaration(params, periode) {
   day = day < 10 ? '0' + day.toString() : day.toString()
   bill.date = moment('' + subData[2] + '-' + subData[1] + '-' + day)
   bill.vendor = 'urssaf'
-  bill.filename = bill.date.format('YYYY-MM') + '.pdf'
+  /**/
+  let month = periode % 100
+  if(month % 10 == 0) {
+    month = month / 10
+  }
+  else
+  {
+    let tri = Math.floor(month/10)
+    month = month % 10
+    month = (tri - 1) * 3 + month
+    if(month < 10)
+      month = '0'+month
+  }
+  let year = 2000+Math.floor(periode/100)
+
+  bill.filename = ''+year+'-'+month+'.pdf'
+
+  /**/
   bill.date = bill.date.toDate()
   bill.filestream = await buildDeclarationPDF(data, periode)
   return bill
@@ -255,6 +273,8 @@ async function buildDeclarationPDF(data, periode) {
     fontSize: 14
   })
 
+  doc.cell({ paddingBottom: 1.0 * pdf.cm }).text()
+
   //first table
   let tableau = data('.tableau_donnees')
   table = doc.table({
@@ -263,13 +283,14 @@ async function buildDeclarationPDF(data, periode) {
   })
   let element = data(tableau[0]).children('tbody')
   let subData = element.children('tr')
+  let optsLeft = { backgroundColor: '#A0A0A0' }
   subData.each((i, elem) => {
     elem = data(elem).children('td')
     let value = data(elem[0])
       .text()
       .trim()
     let row = table.row({ padding: 0.1 * pdf.cm })
-    row.cell(value, { backgroundColor: '#A0A0A0' })
+    row.cell(value, optsLeft)
     value = data(elem[1])
       .find('span')
       .text()
@@ -287,10 +308,15 @@ async function buildDeclarationPDF(data, periode) {
   })
   element = data(tableau[1]).children('tbody')
   subData = element.children('tr')
+
   //parse table
   subData.each((i, elem) => {
     const savedElem = elem
     elem = data(elem).children('td')
+    
+    let optsRight = { alignment: 'right' }
+    let optsCenter = { alignment: 'center' }
+
     let key = data(elem[0])
       .text()
       .trim()
@@ -302,7 +328,6 @@ async function buildDeclarationPDF(data, periode) {
         let title = data(elem[0])
           .find('b')
           .text()
-        let optsLeft = { backgroundColor: '#A0A0A0' }
         let row = table.row({ padding: 0.1 * pdf.cm })
         let cell = row.cell(title, optsLeft)
         let subTable = cell.table({
@@ -327,8 +352,8 @@ async function buildDeclarationPDF(data, periode) {
           )
         }
         let subRow = subTable.row()
-        subRow.cell('.', { color: '#FFFFFF' })
-        subRow.cell('.', { color: '#FFFFFF' })
+        subRow.cell('.', { color: '#A0A0A0' })
+        subRow.cell('.', { color: '#A0A0A0' })
 
         subElem = data(elem[1]).find('tr')
         for (let k = 1; k <= 2; k++) {
@@ -342,8 +367,9 @@ async function buildDeclarationPDF(data, periode) {
           for (let j = 0; j < subElem.length; j++) {
             let subRow = subTable.row()
             const td = data(subElem[j]).find('td')
-            let optsRight = { alignment: 'right' }
-            if (k === 1) optsRight = { alignment: 'center' }
+            optsRight.alignment = 'right'
+            delete optsRight.color
+            if (k === 1) optsRight.alignment = 'center'
             let text = data(td[k])
               .text()
               .trim()
@@ -366,11 +392,6 @@ async function buildDeclarationPDF(data, periode) {
             .find('strong')
             .text()
             .trim()
-          let optsLeft = { backgroundColor: '#A0A0A0' }
-          let optsRight = { alignment: 'right', color: '#000000' }
-          let optsCenter = { alignment: 'center', color: '#000000' }
-          let optsRightWhite = { alignment: 'right', color: '#FFFFFF' }
-          let optsCenterWhite = { alignment: 'center', color: '#FFFFFF' }
           let row = table.row({ padding: 0.1 * pdf.cm })
 
           let cell = row.cell(title, optsLeft)
@@ -402,21 +423,22 @@ async function buildDeclarationPDF(data, periode) {
           title = data(subElem[1])
             .text()
             .trim()
-          cell = row.cell('.', optsCenterWhite)
+          optsCenter.color = '#FFFFFF'
+          cell = row.cell('.', optsCenter)
+          delete optsCenter.color
           subTable = cell.table({ widths: [55], borderWidth: 0 })
           subRow = subTable.row()
           subRow.cell(title, optsCenter)
           title = data(subElem[2])
             .text()
             .trim()
-          cell = row.cell('.', optsRightWhite)
+          optsRight.color = '#FFFFFF'
+          cell = row.cell('.', optsRight)
+          delete optsRight.color
           subTable = cell.table({ widths: [73], borderWidth: 0 })
           subRow = subTable.row()
           subRow.cell(title, optsRight)
         }
-        let optsLeft = { backgroundColor: '#A0A0A0' }
-        let optsRight = { alignment: 'right', color: '#000000' }
-        let optsCenter = { alignment: 'center', color: '#000000' }
         let subElem = data(elem[elem.length - 1]).find('.cellule_gauche_middle')
         let row = table.row({ padding: 0.1 * pdf.cm })
         row.cell(
@@ -441,7 +463,6 @@ async function buildDeclarationPDF(data, periode) {
           optsRight
         )
       }
-
       return true
     }
     if (key !== '') {
@@ -450,9 +471,6 @@ async function buildDeclarationPDF(data, periode) {
         .parent()
       let value = ''
       let interValue = ''
-      let optsRight = { alignment: 'right' }
-      let optsCenter = { alignment: 'center' }
-      let optsLeft = { backgroundColor: '#A0A0A0' }
       let factor = 0.1
       //has 2 col value
       if (subElem.length > 1) {
@@ -473,8 +491,9 @@ async function buildDeclarationPDF(data, periode) {
       }
       //has no col value
       if (value === '') {
-        optsLeft = { colspan: 3 }
+        optsLeft.colspan = 3
         factor = 0.3
+        delete optsLeft.backgroundColor
       }
       //make row
       let row = table.row({ padding: factor * pdf.cm })
@@ -485,6 +504,9 @@ async function buildDeclarationPDF(data, periode) {
       if (value !== '') {
         row.cell(value, optsRight)
       }
+      delete optsRight.colspan
+      delete optsLeft.colspan
+      optsLeft.backgroundColor='#A0A0A0'
     }
   })
 

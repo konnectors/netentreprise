@@ -5,7 +5,7 @@
   "language": "node",
   "icon": "icon.png",
   "slug": "net-entreprise-micro",
-  "source": "https://git.mob-dev.fr/Schoumi/cozy-konnector-netentreprise.git",
+  "source": "git://github.com/Schoumi/Net-Entreprise-AE.git",
   "editor": "Mob-Dev",
   "vendor_link": "https://www.net-entreprises.fr/",
   "categories": ["other"],

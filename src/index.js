@@ -197,7 +197,10 @@ async function getDeclaration(params, periode) {
   let subData = scrape(data('#table-paiements-tldp .cellule_droite_middle'), {
     amount: {
       sel: 'span#libmtpai',
-      parse: value => { value = value.replace(".",""); return parseInt(value) }
+      parse: value => {
+        value = value.replace('.', '')
+        return parseInt(value)
+      }
     }
   })
   let bill = {}
@@ -219,7 +222,9 @@ async function getDeclaration(params, periode) {
   subData = subData.split('/')
   let day = parseInt(subData[0])
   day = day < 10 ? '0' + day.toString() : day.toString()
-  bill.date = moment('' + subData[2] + '-' + subData[1] + '-' + day+'T00:00:00.000Z').add(1,'days')
+  bill.date = moment(
+    '' + subData[2] + '-' + subData[1] + '-' + day + 'T00:00:00.000Z'
+  ).add(1, 'days').toDate()
   bill.vendor = 'urssaf'
   let month = periode % 100
   if (month % 10 == 0) {

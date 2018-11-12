@@ -1,13 +1,13 @@
 {
-  "name": "cozy-konnector-template",
+  "name": "cozy-konnector-net-entreprise-micro",
   "version": "1.0.0",
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/konnectors/cozy-konnector-template.git"
+    "url": "git+https://github.com/konnectors/net-entreprise-micro.git"
   },
   "keywords": [],
-  "author": "Cozy Cloud",
+  "author": "Schoumi",
   "license": "AGPL-3.0",
   "main": "./src/index.js",
   "eslintConfig": {
@@ -29,13 +29,13 @@
     "build": "webpack",
     "precommit": "yarn lint",
     "lint": "eslint --fix .",
-    "deploy": "git-directory-deploy --directory build/ --branch ${DEPLOY_BRANCH:-build} --repo=${DEPLOY_REPOSITORY:-https://$GITHUB_TOKEN@github.com/konnectors/cozy-konnector-template.git}",
+    "deploy": "git-directory-deploy --directory build/ --branch ${DEPLOY_BRANCH:-build} --repo=${DEPLOY_REPOSITORY:-https://$GITHUB_TOKEN@github.com/konnectors/net-entreprise-micro.git}",
     "cozyPublish": "cozy-app-publish --token $REGISTRY_TOKEN --build-commit $(git rev-parse ${DEPLOY_BRANCH:-build})",
     "travisDeployKey": "./bin/generate_travis_deploy_key"
   },
   "dependencies": {
     "cozy-konnector-libs": "4.11.2",
-    "moment": "^2.22.2"
+    "moment": "2.22.2"
   },
   "devDependencies": {
     "copy-webpack-plugin": "4.5.2",

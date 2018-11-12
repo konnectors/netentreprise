@@ -224,7 +224,9 @@ async function getDeclaration(params, periode) {
   day = day < 10 ? '0' + day.toString() : day.toString()
   bill.date = moment(
     '' + subData[2] + '-' + subData[1] + '-' + day + 'T00:00:00.000Z'
-  ).add(1, 'days').toDate()
+  )
+    .add(1, 'days')
+    .toDate()
   bill.vendor = 'urssaf'
   let month = periode % 100
   if (month % 10 == 0) {

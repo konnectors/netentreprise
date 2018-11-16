@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "name": "Net-Entreprise (Micro-Entrepreneur)",
   "type": "konnector",
   "language": "node",
@@ -8,7 +8,9 @@
   "source": "git://github.com/konnectors/net-entreprise-micro.git",
   "editor": "Mob-Dev",
   "vendor_link": "https://www.net-entreprises.fr/",
-  "categories": ["other"],
+  "categories": [
+    "other"
+  ],
   "fields": {
     "siret": {
       "type": "text"
@@ -45,14 +47,19 @@
     },
     "accounts": {
       "type": "io.cozy.accounts",
-      "verbs": ["GET"]
+      "verbs": [
+        "GET"
+      ]
     }
   },
   "developer": {
     "name": "Mob-Dev",
     "url": "https://mob-dev.fr"
   },
-  "langs": ["fr", "en"],
+  "langs": [
+    "fr",
+    "en"
+  ],
   "locales": {
     "fr": {
       "short_description": "Connecteur pour Net-entreprise Micro-Entrepreneur",

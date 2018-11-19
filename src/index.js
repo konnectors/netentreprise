@@ -179,6 +179,7 @@ async function getAllDeclaration(params, declarationList) {
       accData.lastSaved = declarationList[i]
       this.saveAccountData(accData, { merge: false })
     } catch (error) {
+      log('error',error)
       break
     }
   }
@@ -243,7 +244,6 @@ async function getDeclaration(params, periode) {
   }
   let year = 2000 + Math.floor(periode / 100)
   bill.filename = '' + year + '-' + month + '.pdf'
-  bill.date = bill.date.toDate()
   bill.filestream = await buildDeclarationPDF(data, periode)
   return bill
 }

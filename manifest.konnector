@@ -62,6 +62,11 @@
   ],
   "locales": {
     "fr": {
+      "fields": {
+        "siret": {
+          "label": "N° de siret"
+        }
+      },
       "short_description": "Connecteur pour Net-entreprise Micro-Entrepreneur",
       "long_description": "Ce connecteur récupère les déclarations faites auprès de l'urssaf via Net-Entreprise pour les Micro-Entrepreneur seulement",
       "permissions": {
@@ -80,6 +85,11 @@
       }
     },
     "en": {
+      "fields": {
+        "siret": {
+          "label": "Siret number"
+        }
+      },
       "short_description": "Connector for Net-entreprise Micro-Entrepreneur",
       "long_description": "This connector retrieve declaration made to urssaf through Net-Entreprise for Micro-Entrepreneur only",
       "permissions": {

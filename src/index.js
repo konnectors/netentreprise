@@ -179,7 +179,7 @@ async function getAllDeclaration(params, declarationList) {
       accData.lastSaved = declarationList[i]
       this.saveAccountData(accData, { merge: false })
     } catch (error) {
-      log('error',error)
+      log('error', error)
       break
     }
   }

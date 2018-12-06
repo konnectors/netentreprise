@@ -17,6 +17,8 @@ try {
 }
 const appIconRX = iconName && new RegExp(`[^/]*/${iconName}`)
 
+const base64Image = new Buffer(fs.readFileSync("img.jpg")).toString('base64');
+
 module.exports = {
   entry,
   target: 'node',
@@ -40,7 +42,17 @@ module.exports = {
     // WARNING in ../libs/node_modules/bindings/bindings.js 76:22-40
     // Critical dependency: the request of a dependency is an expression
     // Since we cannot change this dependency. I think it won't hide more important messages
-    exprContextCritical: false
+    exprContextCritical: false,
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'string-replace-loader',
+        options: {
+          search: "fs.readFileSync('img.jpg')",
+          replace: "Buffer.from('" + base64Image + "', 'base64')",
+        }
+      }
+    ]
   }
 }
 

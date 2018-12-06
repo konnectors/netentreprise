@@ -252,7 +252,7 @@ async function getDeclaration(params, periode) {
 async function buildDeclarationPDF(data, periode) {
   var doc = new pdf.Document()
 
-  doc.text('Généré par le connceteur Net-Entreprise (Micro-Entrepreneur)', {
+  doc.text('Généré par le connecteur Net-Entreprise (Micro-Entrepreneur)', {
     font: require('pdfjs/font/Helvetica-Bold'),
     fontSize: 9
   })

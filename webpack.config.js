@@ -17,7 +17,7 @@ try {
 }
 const appIconRX = iconName && new RegExp(`[^/]*/${iconName}`)
 
-const base64Image = new Buffer(fs.readFileSync("img.jpg")).toString('base64');
+const base64Image = new Buffer(fs.readFileSync('img.jpg')).toString('base64')
 
 module.exports = {
   entry,
@@ -49,7 +49,7 @@ module.exports = {
         loader: 'string-replace-loader',
         options: {
           search: "fs.readFileSync('img.jpg')",
-          replace: "Buffer.from('" + base64Image + "', 'base64')",
+          replace: "Buffer.from('" + base64Image + "', 'base64')"
         }
       }
     ]

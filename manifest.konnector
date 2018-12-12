@@ -8,9 +8,7 @@
   "source": "git://github.com/konnectors/net-entreprise-micro.git",
   "editor": "Mob-Dev",
   "vendor_link": "https://www.net-entreprises.fr/",
-  "categories": [
-    "other"
-  ],
+  "categories": ["other"],
   "fields": {
     "siret": {
       "type": "text"
@@ -31,9 +29,7 @@
       }
     }
   },
-  "data_types": [
-    "bill"
-  ],
+  "data_types": ["bill"],
   "screenshots": [],
   "permissions": {
     "bank operations": {
@@ -47,19 +43,14 @@
     },
     "accounts": {
       "type": "io.cozy.accounts",
-      "verbs": [
-        "GET"
-      ]
+      "verbs": ["GET"]
     }
   },
   "developer": {
     "name": "Mob-Dev",
     "url": "https://mob-dev.fr"
   },
-  "langs": [
-    "fr",
-    "en"
-  ],
+  "langs": ["fr", "en"],
   "locales": {
     "fr": {
       "fields": {
@@ -108,6 +99,6 @@
       }
     }
   },
-  "banksTransactionRegExp": "\\bnet\-entreprise\\b",
+  "banksTransactionRegExp": "\\bnet\\-entreprise\\b",
   "manifest_version": "2"
 }

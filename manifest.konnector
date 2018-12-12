@@ -108,5 +108,6 @@
       }
     }
   },
+  "banksTransactionRegExp": "\\bnet\-entreprise\\b",
   "manifest_version": "2"
 }

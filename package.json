@@ -48,7 +48,7 @@
     "konitor": "0.10.1",
     "string-replace-loader": "^2.1.1",
     "svgo": "1.1.1",
-    "webpack": "4.27.1",
+    "webpack": "4.28.1",
     "webpack-cli": "3.1.2"
   }
 }

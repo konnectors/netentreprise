@@ -47,7 +47,7 @@ async function start(fields) {
   const bills = await getAllDec(params, declarationList)
 
   await saveBills(bills, fields, {
-    identifiers: ['net-entreprise'],
+    identifiers: ['Urssaf'],
     contentType: 'application/pdf'
   })
 }
@@ -250,6 +250,7 @@ async function getDeclaration(params, periode) {
 
 /* Build PDF from declaration */
 async function buildDeclarationPDF(data, periode) {
+  log('info','Get Declaration '+periode)
   var doc = new pdf.Document()
 
   doc.text('Généré par le connecteur Net-Entreprise (Micro-Entrepreneur)', {

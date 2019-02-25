@@ -250,7 +250,7 @@ async function getDeclaration(params, periode) {
 
 /* Build PDF from declaration */
 async function buildDeclarationPDF(data, periode) {
-  log('info','Get Declaration '+periode)
+  log('info', 'Get Declaration ' + periode)
   var doc = new pdf.Document()
 
   doc.text('Généré par le connecteur Net-Entreprise (Micro-Entrepreneur)', {

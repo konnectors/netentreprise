@@ -126,8 +126,8 @@ async function getDeclarationsParameters(url) {
 
 /* Get all available declarations IDs */
 async function buildDeclarationList(params) {
-  params.codepaye = 10
-  params.echeance = 44
+  params.codepaye = params.codep
+  params.echeance = params.ech
   params.listexi = ''
   params.habpai = 'N'
   params.habdev = 'N'

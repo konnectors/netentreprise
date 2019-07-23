@@ -165,7 +165,7 @@ async function getList(params, urlPart, subItem, splitPart) {
 /* Function that retrieve all new declaration not sync before */
 async function getAllDeclaration(params, declarationList) {
   let accData = this.getAccountData()
-  let exist = Object.keys(accData).length > 0
+  let exist = Object.keys(accData).includes('lastSaved')
   let bills = []
   let lastPeriod = declarationList.length - 1
   if (exist) {
@@ -177,7 +177,7 @@ async function getAllDeclaration(params, declarationList) {
       const bill = await getDeclaration(params, declarationList[i])
       bills.push(bill)
       accData.lastSaved = declarationList[i]
-      this.saveAccountData(accData, { merge: false })
+      await this.saveAccountData(accData, { merge: false })
     } catch (error) {
       log('error', error)
       break

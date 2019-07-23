@@ -126,7 +126,7 @@ async function getDeclarationsParameters(url) {
 
 /* Get all available declarations IDs */
 async function buildDeclarationList(params) {
-  params.codepaye = params.codep
+  params.codepaye = params.codp
   params.echeance = params.ech
   params.listexi = ''
   params.habpai = 'N'
@@ -188,12 +188,8 @@ async function getAllDeclaration(params, declarationList) {
 
 /* Get a specific declaration */
 async function getDeclaration(params, periode) {
+  log('info', 'Get Declaration ' + periode)
   params.periode = periode
-  params.codepaye = 10
-  params.echeance = 44
-  params.listexi = ''
-  params.habpai = 'N'
-  params.habdev = 'N'
   const data = await request({
     method: 'POST',
     uri: `${urssafUrl}/action.histo_netmicro`,
@@ -250,7 +246,6 @@ async function getDeclaration(params, periode) {
 
 /* Build PDF from declaration */
 async function buildDeclarationPDF(data, periode) {
-  log('info', 'Get Declaration ' + periode)
   var doc = new pdf.Document()
 
   doc.text('Généré par le connecteur Net-Entreprise (Micro-Entrepreneur)', {

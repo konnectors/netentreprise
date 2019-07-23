@@ -67,7 +67,7 @@ You can reach the Cozy Community by:
 License
 -------
 
-Net-Entreprises-AE is developed by Schoumi and distributed under the [AGPL v3 license][agpl-3.0].
+net-entreprises-micro is developed by Schoumi and distributed under the [AGPL v3 license][agpl-3.0].
 
 [cozy]: https://cozy.io "Cozy Cloud"
 [agpl-3.0]: https://www.gnu.org/licenses/agpl-3.0.html

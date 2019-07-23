@@ -171,6 +171,7 @@ async function getAllDeclaration(params, declarationList) {
   if (exist) {
     let lastSaved = declarationList.indexOf(accData.lastSaved)
     if (lastSaved !== -1) lastPeriod = lastSaved
+    if (lastPeriod === 0) lastPeriod = -1
   }
   for (let i = lastPeriod; i >= 0; i--) {
     try {

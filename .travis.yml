@@ -3,7 +3,6 @@ node_js:
 - '12'
 env:
   global:
-  - DEPLOY_REPOSITORY="git@github.com:konnectors/net-entreprise-micro.git"
   # REGISTRY_TOKEN(editor=cozy, app=net-entreprise-micro)
   - secure: EkbT0cYWKRum/WWzMs96EEz6C7wNo4QLTyr3bmCks/CKpgNaSTnJr7HOQHrvRBigIm0N8qdQ1FozaMpYXsfLV/gXH6mR09+JIOqd8EqU4KWdlBgiXTVN7L7cmrCrY2CzWPc/oHldSPBohEPoEAFSNTMkFtQmF+fJrKAtt1ue8fqUbPB07gIghK0+1l4Tx7708jjCird1QDvlHo33OHOTdQFgcsvWCMO0I9zBCZ9ibsQ8E2awJbtHI+hKF2gtIgyL8rol8its9Byzc1gH3IqTu6Dnhp3/Oo7gJn8WKo4nBnVjYyguXmeN1Zx9nHei0zZ8Etakncv44682byRVlRG0p/j7EZTvFN0J1XZ0LzNTJXib8HRh+/VXP1GcHiJurz+Xz097zm90bhBZjLapc/JklPhG7cRaTdrUc1NRXoMrN7W1rkanIJgGz1j/QYt7z7RLkLAeOkCecpLuZR4TdyiDnYBytqDGssoPz1A1ySwBexCmdT4sTN9NlxCyvR3PSVV13iTg3pZzw6EhCvdMws54bHzKmstV6Oy/e3Wklqb5WttGISayD3KVvYL/oiPs4tbkClvqzasMHlnJy8vmt0HQmlYEuJCkM17B2CZgyqh+KfC3PjSC+t4SHkqiyhWX7w1jyNCgzR4kfcrh9Kr02DUp6EAcMrdgYCMvYS4Gtxsvdpc=
   # MATTERMOST_HOOK_URL
